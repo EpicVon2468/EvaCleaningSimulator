@@ -7,12 +7,12 @@ import com.badlogic.gdx.utils.viewport.Viewport
 
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Fonts
 
-class TextActor : Actor() {
+class TextActor(val text: String = "Hello, world!") : Actor() {
 
-	val viewport: Viewport get() = this.stage!!.viewport
-	val layout: GlyphLayout = GlyphLayout(Fonts.jetBrainsMono, "Hello, world!")
+	val viewport: Viewport get() = stage!!.viewport
+	val layout: GlyphLayout = GlyphLayout(Fonts.jetBrainsMono, text)
 
 	override fun draw(batch: Batch, parentAlpha: Float) {
-		Fonts.jetBrainsMono.draw(batch, "Hello, world!", (viewport.worldWidth / 2.0f) - layout.width / 2.0f, (viewport.worldHeight / 2.0f) - layout.height / 2.0f)
+		Fonts.jetBrainsMono.draw(batch, text, (viewport.worldWidth / 2.0f) - layout.width / 2.0f, (viewport.worldHeight / 2.0f) + layout.height / 2.0f)
 	}
 }
