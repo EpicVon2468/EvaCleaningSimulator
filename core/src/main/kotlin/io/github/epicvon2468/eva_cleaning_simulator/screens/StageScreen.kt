@@ -1,5 +1,5 @@
 @file:Suppress("InconsistentCommentForJavaParameter")
-package io.github.epicvon2468.eva_cleaning_simulator.screen
+package io.github.epicvon2468.eva_cleaning_simulator.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -13,11 +13,17 @@ open class StageScreen(var needsInit: Boolean = true) : KtxScreen {
 
 	override fun show() {
 		if (needsInit) {
+			preInit()
 			stage
 			Gdx.input.inputProcessor = stage
+			postInit()
 			needsInit = false
 		}
 	}
+
+	open fun preInit() = Unit
+
+	open fun postInit() = Unit
 
 	override fun resize(width: Int, height: Int) = stage.viewport.update(width, height, /*centreCamera =*/ true)
 

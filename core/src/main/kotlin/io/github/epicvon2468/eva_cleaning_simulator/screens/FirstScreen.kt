@@ -1,4 +1,4 @@
-package io.github.epicvon2468.eva_cleaning_simulator.screen
+package io.github.epicvon2468.eva_cleaning_simulator.screens
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch

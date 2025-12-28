@@ -1,6 +1,6 @@
 package io.github.epicvon2468.eva_cleaning_simulator
 
-import io.github.epicvon2468.eva_cleaning_simulator.screen.StageScreen
+import io.github.epicvon2468.eva_cleaning_simulator.screens.MainMenuScreen
 
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -11,7 +11,7 @@ class Main : KtxGame<KtxScreen>() {
 	override fun create() {
 		KtxAsync.initiate()
 
-		addScreen(StageScreen())
-		setScreen<StageScreen>()
+		addScreen(MainMenuScreen())
+		setScreen<MainMenuScreen>()
 	}
 }
