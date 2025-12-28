@@ -9,7 +9,7 @@ import ktx.freetype.generateFont
 
 object Fonts {
 
-	val jetbrainsMono: BitmapFont by lazy {
+	val jetBrainsMono: BitmapFont by lazy {
 		FreeTypeFontGenerator(Gdx.files.internal("JetBrainsMono-Light.ttf")).generateFont {
 			mono = true
 			borderStraight = true
