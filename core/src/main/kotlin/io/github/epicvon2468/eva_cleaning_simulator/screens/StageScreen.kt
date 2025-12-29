@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 
 import ktx.app.KtxScreen
 
-open class StageScreen(var needsInit: Boolean = true) : KtxScreen {
+open class StageScreen(@JvmField var needsInit: Boolean = true) : KtxScreen {
 
 	val stage: Stage by lazy { Stage(ScreenViewport()) }
 
