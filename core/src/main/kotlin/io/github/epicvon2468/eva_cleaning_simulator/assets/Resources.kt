@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.I18NBundle
 
 import java.util.Locale
 
+// TODO: https://libgdx.com/wiki/managing-your-assets
 object Resources {
 
 	enum class Type(val folder: String) {
