@@ -1,23 +1,28 @@
 package io.github.epicvon2468.eva_cleaning_simulator.assets
 
-import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.assets.loaders.I18NBundleLoader
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.I18NBundle
+
+import ktx.freetype.registerFreeTypeFontLoaders
 
 import java.util.Locale
 
 // TODO: https://libgdx.com/wiki/managing-your-assets
-object Resources {
+// 	Add loading screen + make async
+data object Resources : AssetManager() {
 
-	enum class Type(val folder: String) {
-		FONT("fonts"),
-		TEXTURE("textures"),
-		TRANSLATION("i18n")
+	init {
+		registerFreeTypeFontLoaders()
+		loadAll()
 	}
 
-	fun getResource(path: String, type: Type): FileHandle = Gdx.files.internal("resources/${type.folder}/$path")
-	fun getFont(path: String): FileHandle = getResource(path, Type.FONT)
-	fun getTexture(path: String): FileHandle = getResource(path, Type.TEXTURE)
-	private val i18nFile: FileHandle = getResource("i18n", Type.TRANSLATION) // Not a real file, and yet it is what I18NBundle needs.
-	fun getTranslation(locale: Locale): I18NBundle = I18NBundle.createBundle(i18nFile, locale)
+	fun loadAll() {
+		load("resources/i18n/i18n", I18NBundle::class.java, I18NBundleLoader.I18NBundleParameter(Locale.getDefault(), "ISO-8859-1"))
+	}
+
+	fun getFont(path: String): FileHandle = this[path]
+	fun getTexture(path: String): FileHandle = this[path]
+	fun getTranslation(): I18NBundle = finishLoadingAsset<I18NBundle>("resources/i18n/i18n")
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.style.label
 import ktx.style.skin
 
-object Skins {
+data object Skins {
 
 	val primary: Skin by lazy {
 		skin {

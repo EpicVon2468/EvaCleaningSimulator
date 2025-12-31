@@ -2,20 +2,20 @@ package io.github.epicvon2468.eva_cleaning_simulator.assets
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 
-import ktx.freetype.generateFont
+import ktx.assets.Asset
+import ktx.assets.getValue
+import ktx.freetype.loadFreeTypeFont
 
-object Fonts {
+data object Fonts {
 
-	val jetBrainsMono: BitmapFont by lazy {
-		FreeTypeFontGenerator(Resources.getFont("JetBrainsMono-Light.ttf")).generateFont {
-			mono = true
-			borderStraight = true
-			kerning = false
-			size = 32
-			minFilter = Texture.TextureFilter.Linear
-			magFilter = Texture.TextureFilter.Linear
-		}
-	}
+	private val _jetBrainsMono: Asset<BitmapFont> = Resources.loadFreeTypeFont("resources/fonts/JetBrainsMono-Light.ttf") {
+		mono = true
+		borderStraight = true
+		kerning = false
+		size = 32
+		minFilter = Texture.TextureFilter.Linear
+		magFilter = Texture.TextureFilter.Linear
+	}.apply(Asset<BitmapFont>::finishLoading)
+	val jetBrainsMono: BitmapFont by _jetBrainsMono
 }
