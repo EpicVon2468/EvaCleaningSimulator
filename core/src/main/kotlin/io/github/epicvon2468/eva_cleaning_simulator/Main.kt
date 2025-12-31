@@ -4,7 +4,8 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.I18NBundle
 
-import io.github.epicvon2468.eva_cleaning_simulator.assets.I18n
+import io.github.epicvon2468.eva_cleaning_simulator.assets.Fonts
+import io.github.epicvon2468.eva_cleaning_simulator.assets.Resources
 import io.github.epicvon2468.eva_cleaning_simulator.screens.LoadingScreen
 import io.github.epicvon2468.eva_cleaning_simulator.screens.MainMenuScreen
 
@@ -19,7 +20,6 @@ class Main : KtxGame<KtxScreen>() {
 		Gdx.app.logLevel = Application.LOG_DEBUG
 		I18NBundle.setExceptionOnMissingKey(false)
 		KtxAsync.initiate()
-		Gdx.graphics.setTitle(I18n.translate("screen.main.text.title"))
 
 		addScreens()
 		setScreen<LoadingScreen>()
@@ -28,5 +28,11 @@ class Main : KtxGame<KtxScreen>() {
 	private fun addScreens() {
 		addScreen(MainMenuScreen(this))
 		addScreen(LoadingScreen(this))
+	}
+
+	override fun dispose() {
+		super.dispose()
+		Fonts.dispose()
+		Resources.dispose()
 	}
 }

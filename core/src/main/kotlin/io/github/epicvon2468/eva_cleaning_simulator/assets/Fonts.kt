@@ -2,12 +2,13 @@ package io.github.epicvon2468.eva_cleaning_simulator.assets
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.utils.Disposable
 
 import ktx.assets.Asset
 import ktx.assets.getValue
 import ktx.freetype.loadFreeTypeFont
 
-data object Fonts {
+data object Fonts : Disposable {
 
 	private val _jetBrainsMono: Asset<BitmapFont> = Resources.loadFreeTypeFont("resources/fonts/JetBrainsMono-Light.ttf") {
 		mono = true
@@ -22,4 +23,9 @@ data object Fonts {
 	@JvmField
 	@Suppress("GDXKotlinStaticResource")
 	val preResourceLoad: BitmapFont = BitmapFont()
+
+	override fun dispose() {
+		// don't dispose JetBrainsMono-Light since it's owned by Resources
+		preResourceLoad.dispose()
+	}
 }

@@ -18,7 +18,7 @@ data object Skins {
 	}
 
 	@JvmField
-	@Suppress("GDXKotlinStaticResource") // Nothing to dispose
+	@Suppress("GDXKotlinStaticResource") // Skin class tries to dispose all objects contained within, could have unwanted effects
 	val preResourceLoad: Skin = skin {
 		add("default", Fonts.preResourceLoad, BitmapFont::class.java)
 		label {
