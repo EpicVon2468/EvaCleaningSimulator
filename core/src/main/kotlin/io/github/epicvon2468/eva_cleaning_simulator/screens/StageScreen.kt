@@ -3,8 +3,10 @@ package io.github.epicvon2468.eva_cleaning_simulator.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 
+import io.github.epicvon2468.eva_cleaning_simulator.Main
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Skins
 
 import ktx.app.KtxScreen
@@ -12,21 +14,23 @@ import ktx.graphics.LetterboxingViewport
 
 // https://libgdx.com/wiki/graphics/2d/scene2d/scene2d-ui
 // https://libgdx.com/wiki/graphics/2d/scene2d/table
-open class StageScreen(@JvmField var needsInit: Boolean = true) : KtxScreen {
+open class StageScreen(@JvmField val main: Main, @JvmField var needsInit: Boolean = true) : KtxScreen {
 
-	val stage: Stage by lazy {
+	open val stage: Stage by lazy {
 		Stage(LetterboxingViewport()).apply {
 			Gdx.input.inputProcessor = this
 		}
 	}
-	val table: Table by lazy {
-		Table(Skins.primary).apply {
+	open val table: Table by lazy {
+		Table(getTableSkin()).apply {
 			setFillParent(true)
 			this@StageScreen.stage.addActor(this)
 			clip = true
 			//debug = true
 		}
 	}
+
+	open fun getTableSkin(): Skin = Skins.primary
 
 	override fun show() {
 		if (needsInit) {

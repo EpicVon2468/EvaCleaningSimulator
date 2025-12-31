@@ -16,4 +16,13 @@ data object Skins {
 			}
 		}
 	}
+
+	@JvmField
+	@Suppress("GDXKotlinStaticResource") // Nothing to dispose
+	val preResourceLoad: Skin = skin {
+		add("default", Fonts.preResourceLoad, BitmapFont::class.java)
+		label {
+			font = Fonts.preResourceLoad
+		}
+	}
 }

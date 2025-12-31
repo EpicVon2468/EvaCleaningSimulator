@@ -16,6 +16,10 @@ data object Fonts {
 		size = 32
 		minFilter = Texture.TextureFilter.Linear
 		magFilter = Texture.TextureFilter.Linear
-	}.apply(Asset<BitmapFont>::finishLoading)
+	}
 	val jetBrainsMono: BitmapFont by _jetBrainsMono
+
+	@JvmField
+	@Suppress("GDXKotlinStaticResource")
+	val preResourceLoad: BitmapFont = BitmapFont()
 }

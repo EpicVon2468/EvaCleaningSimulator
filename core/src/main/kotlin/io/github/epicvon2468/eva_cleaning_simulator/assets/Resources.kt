@@ -19,10 +19,12 @@ data object Resources : AssetManager() {
 	}
 
 	fun loadAll() {
+		// libGDX tries to read it as UTF-8, but IntelliJ won't let me reformat it as such no matter what.
 		load("resources/i18n/i18n", I18NBundle::class.java, I18NBundleLoader.I18NBundleParameter(Locale.getDefault(), "ISO-8859-1"))
+		Fonts
 	}
 
 	fun getFont(path: String): FileHandle = this[path]
 	fun getTexture(path: String): FileHandle = this[path]
-	fun getTranslation(): I18NBundle = finishLoadingAsset<I18NBundle>("resources/i18n/i18n")
+	fun getTranslations(): I18NBundle = finishLoadingAsset<I18NBundle>("resources/i18n/i18n")
 }

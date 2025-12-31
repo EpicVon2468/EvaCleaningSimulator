@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.I18NBundle
 data object I18n {
 
 	@JvmField
-	val bundle: I18NBundle = Resources.getTranslation()
+	val bundle: I18NBundle = Resources.getTranslations()
 
 	fun translate(key: String, default: String = key): String = bundle[key].let { if (it == "???$key???") default else it }
 }
