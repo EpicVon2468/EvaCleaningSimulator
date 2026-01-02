@@ -2,6 +2,7 @@ package io.github.epicvon2468.eva_cleaning_simulator.assets
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Disposable
 
 import ktx.assets.Asset
@@ -22,7 +23,12 @@ data object Fonts : Disposable {
 
 	@JvmField
 	@Suppress("GDXKotlinStaticResource")
-	val preResourceLoad: BitmapFont = BitmapFont()
+	val preResourceLoad: BitmapFont = BitmapFont().apply {
+		regions.forEach { textureRegion: TextureRegion ->
+			textureRegion.texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear)
+		}
+		data.scale(2.0f)
+	}
 
 	override fun dispose() {
 		// don't dispose JetBrainsMono-Light since it's owned by Resources

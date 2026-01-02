@@ -13,6 +13,7 @@ import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.async.KtxAsync
 
+// multiplayer at some point?
 class Main : KtxGame<KtxScreen>() {
 
 	@Suppress("GDXKotlinLogLevel")

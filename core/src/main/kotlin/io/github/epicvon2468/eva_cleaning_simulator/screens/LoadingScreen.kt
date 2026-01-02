@@ -2,7 +2,6 @@ package io.github.epicvon2468.eva_cleaning_simulator.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.Logger
@@ -21,10 +20,7 @@ class LoadingScreen(main: Main) : StageScreen(main) {
 	@Suppress("GDXKotlinLogLevel")
 	override fun postInit() {
 		// Can't use '…' since it doesn't render (shows replacement char)
-		table.add("0.0%").apply {
-			actor.style.font.region.texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear)
-			actor.setFontScale(2.0f)
-		}
+		table.add("0.0%")
 		println("Pre-Resources call")
 		// Call initialiser + set log level
 		Resources.logger.level = Logger.DEBUG
