@@ -1,4 +1,4 @@
-package io.github.epicvon2468.eva_cleaning_simulator.screens
+package io.github.epicvon2468.eva_cleaning_simulator.screens.ui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -6,7 +6,7 @@ import com.badlogic.gdx.Input
 import io.github.epicvon2468.eva_cleaning_simulator.Main
 import io.github.epicvon2468.eva_cleaning_simulator.assets.I18n
 
-class MainMenuScreen(main: Main) : StageScreen(main) {
+class MainMenuScreen(main: Main) : MenuScreen(main) {
 
 	override fun postInit() {
 		Gdx.graphics.setTitle(I18n.translate("screen.main.text.title"))
@@ -15,7 +15,7 @@ class MainMenuScreen(main: Main) : StageScreen(main) {
 	}
 
 	override fun render(delta: Float) {
-		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) main.setScreen<LoadingScreen>()
+		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) main.setScreen<LoadingMenuScreen>()
 		super.render(delta)
 	}
 }

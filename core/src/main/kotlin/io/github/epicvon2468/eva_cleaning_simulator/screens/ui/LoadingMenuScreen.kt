@@ -1,4 +1,4 @@
-package io.github.epicvon2468.eva_cleaning_simulator.screens
+package io.github.epicvon2468.eva_cleaning_simulator.screens.ui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -10,12 +10,12 @@ import io.github.epicvon2468.eva_cleaning_simulator.Main
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Resources
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Skins
 
-class LoadingScreen(main: Main) : StageScreen(main) {
+class LoadingMenuScreen(main: Main) : MenuScreen(main) {
 
 	var progress: Float = 0f
 		private set
 
-	override fun getTableSkin(): Skin = Skins.preResourceLoad
+	override fun tableSkinDefault(): Skin = Skins.preResourceLoad
 
 	@Suppress("GDXKotlinLogLevel")
 	override fun postInit() {

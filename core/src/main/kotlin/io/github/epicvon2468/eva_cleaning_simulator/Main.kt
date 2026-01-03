@@ -6,8 +6,8 @@ import com.badlogic.gdx.utils.I18NBundle
 
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Fonts
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Resources
-import io.github.epicvon2468.eva_cleaning_simulator.screens.LoadingScreen
-import io.github.epicvon2468.eva_cleaning_simulator.screens.MainMenuScreen
+import io.github.epicvon2468.eva_cleaning_simulator.screens.ui.LoadingMenuScreen
+import io.github.epicvon2468.eva_cleaning_simulator.screens.ui.MainMenuScreen
 
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -23,12 +23,12 @@ class Main : KtxGame<KtxScreen>() {
 		KtxAsync.initiate()
 
 		addScreens()
-		setScreen<LoadingScreen>()
+		setScreen<LoadingMenuScreen>()
 	}
 
 	private fun addScreens() {
 		addScreen(MainMenuScreen(this))
-		addScreen(LoadingScreen(this))
+		addScreen(LoadingMenuScreen(this))
 	}
 
 	override fun dispose() {
