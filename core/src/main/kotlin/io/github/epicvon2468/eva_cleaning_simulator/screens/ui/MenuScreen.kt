@@ -7,7 +7,7 @@ import io.github.epicvon2468.eva_cleaning_simulator.screens.StageScreen
 
 import ktx.graphics.LetterboxingViewport
 
-open class MenuScreen(main: Main, needsInit: Boolean = true) : StageScreen(main, needsInit) {
+abstract class MenuScreen(main: Main, needsInit: Boolean = true) : StageScreen(main, needsInit) {
 
 	override fun stageViewportDefault(): Viewport = LetterboxingViewport()
 }

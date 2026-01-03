@@ -26,7 +26,7 @@ abstract class StageScreen(@JvmField val main: Main, @JvmField var needsInit: Bo
 			setFillParent(true)
 			this@StageScreen.stage.addActor(this)
 			clip = true
-			//debug = true
+			debug = true
 		}
 	}
 
