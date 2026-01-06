@@ -1,7 +1,6 @@
 package io.github.epicvon2468.eva_cleaning_simulator.assets
 
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.Texture
 
 import ktx.freetype.registerFreeTypeFontLoaders
 
@@ -17,7 +16,6 @@ data object Resources : AssetManager() {
 	fun loadAll() {
 		I18n
 		Fonts
+		Textures
 	}
-
-	fun getTexture(path: String): Texture = this[path]
 }

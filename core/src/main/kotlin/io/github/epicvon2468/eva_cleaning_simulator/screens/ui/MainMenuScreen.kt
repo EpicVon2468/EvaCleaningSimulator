@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input
 
 import io.github.epicvon2468.eva_cleaning_simulator.Main
 import io.github.epicvon2468.eva_cleaning_simulator.assets.I18n
+import io.github.epicvon2468.eva_cleaning_simulator.screens.world.TutorialWorldScreen
 
 class MainMenuScreen(main: Main) : MenuScreen(main) {
 
@@ -16,6 +17,11 @@ class MainMenuScreen(main: Main) : MenuScreen(main) {
 
 	override fun render(delta: Float) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) main.setScreen<LoadingMenuScreen>()
+		if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+			println("Called")
+			main.addScreen(TutorialWorldScreen(main))
+			main.setScreen<TutorialWorldScreen>()
+		}
 		super.render(delta)
 	}
 }
