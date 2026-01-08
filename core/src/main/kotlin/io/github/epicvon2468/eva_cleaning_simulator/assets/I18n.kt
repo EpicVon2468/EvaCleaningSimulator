@@ -18,5 +18,11 @@ data object I18n {
 	)
 	val bundle: I18NBundle by _bundle
 
-	fun translate(key: String, default: String = key): String = bundle[key].let { if (it == "???$key???") default else it }
+	fun translate(
+		key: String,
+		default: String = key,
+		vararg args: String
+	): String = (if (args.isEmpty()) bundle[key] else bundle.format(key, *args)).let {
+		if (it == "???$key???") default else it
+	}
 }
