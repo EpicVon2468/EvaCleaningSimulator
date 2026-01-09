@@ -8,8 +8,8 @@ import io.github.epicvon2468.eva_cleaning_simulator.screens.StageScreen
 
 abstract class WorldScreen(
 	main: Main,
-	val worldWidth: Float = 16f,
-	val worldHeight: Float = 12f,
+	val worldWidth: Float = 16f * 20,
+	val worldHeight: Float = 12f * 20,
 	needsInit: Boolean = true
 ) : StageScreen(main, needsInit) {
 
