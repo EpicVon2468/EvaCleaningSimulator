@@ -27,7 +27,10 @@ application.mainClass = 'io.github.epicvon2468.eva_cleaning_simulator.lwjgl3.Lwj
 //	compileJava.options.release.set(25)
 //}
 //kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
-kotlin.jvmToolchain(25)
+kotlin {
+	jvmToolchain(25)
+	kotlinDaemonJvmArgs = Arrays.asList("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
+}
 
 dependencies {
 	implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"

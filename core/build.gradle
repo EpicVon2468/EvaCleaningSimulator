@@ -36,3 +36,8 @@ dependencies {
 		implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
 	}
 }
+
+kotlin {
+	jvmToolchain(25)
+	kotlinDaemonJvmArgs = Arrays.asList("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
+}
