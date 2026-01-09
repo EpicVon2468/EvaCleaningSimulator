@@ -16,7 +16,6 @@ apply plugin: 'io.github.fourlastor.construo'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
 import io.github.fourlastor.construo.Target
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
 application.mainClass = 'io.github.epicvon2468.eva_cleaning_simulator.lwjgl3.Lwjgl3Launcher'
@@ -48,8 +47,6 @@ dependencies {
 	}
 }
 
-def os = System.getProperty("os.name").toLowerCase(Locale.ROOT)
-
 run {
 	workingDir = rootProject.file('assets').path
 	// You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
@@ -57,7 +54,7 @@ run {
 	jvmArgs("--enable-native-access=ALL-UNNAMED")
 	environment("__GL_THREADED_OPTIMIZATIONS", 0)
 
-	if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
+	if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
 
 jar {

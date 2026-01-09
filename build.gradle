@@ -10,7 +10,6 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-
 	}
 }
 
@@ -56,7 +55,6 @@ configure(subprojects) {
 	}
 	compileKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
 	compileTestKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
-
 }
 
 subprojects {
