@@ -2,7 +2,7 @@ package io.github.epicvon2468.eva_cleaning_simulator.assets
 
 import com.badlogic.gdx.graphics.Texture
 
-import io.github.epicvon2468.eva_cleaning_simulator.utils.DoNotManuallyDispose
+import io.github.epicvon2468.gdx_helpers.disposables.DoNotManuallyDispose
 
 import ktx.assets.Asset
 import ktx.assets.getValue

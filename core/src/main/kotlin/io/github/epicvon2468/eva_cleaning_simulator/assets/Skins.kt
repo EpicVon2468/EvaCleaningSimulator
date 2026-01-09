@@ -3,7 +3,7 @@ package io.github.epicvon2468.eva_cleaning_simulator.assets
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 
-import io.github.epicvon2468.eva_cleaning_simulator.utils.DoNotManuallyDispose
+import io.github.epicvon2468.gdx_helpers.disposables.DoNotManuallyDispose
 
 import ktx.style.label
 import ktx.style.skin
