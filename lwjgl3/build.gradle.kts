@@ -8,17 +8,12 @@ buildscript {
 	repositories {
 		gradlePluginPortal()
 	}
-	dependencies {
-		classpath("io.github.fourlastor:construo:2.1.0")
-//		if (enableGraalNative == 'true') {
-//			classpath "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.9.28"
-//		}
-	}
 }
+
 plugins {
 	id("application")
-	kotlin("jvm") apply true
-	id("io.github.fourlastor.construo") version "2.1.0" apply true
+	kotlin("jvm")
+	id("io.github.fourlastor.construo") version "2.1.0"
 }
 
 sourceSets.main.get().resources.srcDirs += rootProject.file("assets")
@@ -38,12 +33,6 @@ dependencies {
 	implementation("com.badlogicgames.gdx:gdx-lwjgl3-angle:$gdxVersion")
 	implementation("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
 	implementation(project(":core"))
-
-//	if (enableGraalNative == 'true') {
-//		implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
-//		implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
-//		implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
-//	}
 }
 
 tasks.run.get().apply {
@@ -184,7 +173,3 @@ distributions {
 
 tasks.startScripts.get().dependsOn(":lwjgl3:jar")
 tasks.startScripts.get().classpath = project.tasks.jar.get().outputs.files
-
-//if (enableGraalNative == 'true') {
-//	apply from: file("nativeimage.gradle")
-//}

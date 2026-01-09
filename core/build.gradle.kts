@@ -1,8 +1,16 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
+plugins {
+	kotlin("jvm") version "2.3.0"
+}
+
 tasks.compileJava.get().options.encoding = "UTF-8"
 tasks.compileTestJava.get().options.encoding = "UTF-8"
+
+repositories {
+	mavenCentral()
+}
 
 dependencies {
 	val ashleyVersion: String by project
@@ -12,8 +20,6 @@ dependencies {
 	val ktxVersion: String by project
 	val kotlinVersion: String by project
 	val kotlinxCoroutinesVersion: String by project
-	val graalHelperVersion: String by project
-	val enableGraalNative: String by project
 	api("com.badlogicgames.ashley:ashley:$ashleyVersion")
 	api("com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion")
 	api("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
@@ -46,10 +52,6 @@ dependencies {
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 	implementation(project(":gdx_helpers"))
-
-	if (enableGraalNative == "true") {
-		implementation("io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion")
-	}
 }
 
 kotlin {
