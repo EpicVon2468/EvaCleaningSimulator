@@ -1,0 +1,3 @@
+[submodule "gdx_helpers"]
+	path = gdx_helpers
+	url = https://github.com/EpicVon2468/gdx_helpers

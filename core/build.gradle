@@ -31,6 +31,8 @@ dependencies {
 	api "io.github.libktx:ktx-vis:$ktxVersion"
 	api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+	compileOnly "org.jetbrains:annotations:26.0.2-1"
+	implementation project(":gdx_helpers")
 
 	if (enableGraalNative == 'true') {
 		implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

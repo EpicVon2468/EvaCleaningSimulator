@@ -8,12 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import io.github.epicvon2468.eva_cleaning_simulator.assets.Textures
 
 import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.annotations.MustBeInvokedByOverriders
 
 interface SpriteRenderable {
 
 	@get:ApiStatus.Internal
 	val sprite: Sprite
 
+	@MustBeInvokedByOverriders
 	fun draw(batch: Batch, parentAlpha: Float) = this.sprite.draw(batch, parentAlpha)
 }
 
