@@ -8,5 +8,6 @@ class TutorialWorldScreen(main: Main) : WorldScreen(main) {
 
 	override fun postInit() {
 		stage.addActor(SpriteActor(Textures.notFoundTexture).debug())
+		stage.addActor(SpriteActor(Textures["alien.png"]).debug())
 	}
 }
