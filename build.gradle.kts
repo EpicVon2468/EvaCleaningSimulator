@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.net.URI
 
 buildscript {
@@ -8,10 +7,6 @@ buildscript {
 		mavenLocal()
 		google()
 		//maven { url = java.net.URI("https://central.sonatype.com/repository/maven-snapshots/") }
-	}
-	dependencies {
-		val kotlinVersion: String by project
-//		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
 	}
 }
 
@@ -24,13 +19,12 @@ repositories {
 }
 
 allprojects {
-//	plugins.getAt("idea").apply(this)
-//
-//	// This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
+	apply(plugin = "idea")
+	// This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
 //	idea {
 //		module {
-//			outputDir = file('build/classes/java/main')
-//			testOutputDir = file('build/classes/java/test')
+//			outputDir = file("build/classes/java/main")
+//			testOutputDir = file("build/classes/java/test")
 //		}
 //	}
 }
@@ -42,26 +36,31 @@ configure(subprojects) {
 //	}
 //	java.sourceCompatibility = 25
 
+	// NOTE: This task has been partially rewritten to work with the Kotlin Gradle DSL
 	// From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
 	// The article can be helpful when using assets.txt in your project.
 	tasks.register("generateAssetList") {
-		inputs.dir("${project.rootDir}/assets/")
 		// projectFolder/assets
-		val assetsFolder = File("${project.rootDir}/assets/")
+		val assetsFolder = project.rootDir.resolve("assets")
+		inputs.dir(assetsFolder)
 		// projectFolder/assets/assets.txt
-		val assetsFile = File(assetsFolder, "assets.txt")
+		val assetsFile = assetsFolder.resolve("assets.txt")
 		// delete that file in case we've already created it
 		assetsFile.delete()
 
 		// iterate through all files inside that folder
 		// convert it to a relative path
 		// and append it to the file assets.txt
-		for (entry in assetsFolder.listFiles().sorted()) {
-			assetsFile.writeText(entry.path.substringAfter(assetsFolder.path))
+		fun appendRecursive(folder: File) {
+			for (entry: File in folder.listFiles().sorted()) {
+				if (entry.isDirectory) {
+					appendRecursive(entry)
+					continue
+				}
+				assetsFile.appendText(entry.path.substringAfter(assetsFolder.path).drop(1) + '\n')
+			}
 		}
-//		fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().forEach {
-//			assetsFile.append("$it\n")
-//		}
+		appendRecursive(assetsFolder)
 	}
 	tasks.findByPath("processResources")?.dependsOn("generateAssetList")
 
