@@ -15,7 +15,7 @@ buildscript {
 
 // TODO: Replace all dependencies with version catalogues `libs.versions.toml`.
 plugins {
-	kotlin("jvm") version "2.3.0"
+	alias(libs.plugins.kotlin.jvm)
 }
 
 kotlin {

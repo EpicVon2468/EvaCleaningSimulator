@@ -11,8 +11,8 @@ buildscript {
 
 plugins {
 	id("application")
-	kotlin("jvm") version "2.3.0"
-	id("io.github.fourlastor.construo") version "2.1.0"
+	alias(libs.plugins.kotlin.jvm)
+	alias(libs.plugins.construo)
 }
 
 sourceSets.main.get().resources.srcDirs += rootProject.file("assets")

@@ -2,7 +2,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-	kotlin("jvm") version "2.3.0"
+	alias(libs.plugins.kotlin.jvm)
 }
 
 tasks.compileJava.get().options.encoding = "UTF-8"
@@ -13,44 +13,37 @@ repositories {
 }
 
 dependencies {
-	val ashleyVersion: String by project
-	val gdxControllersVersion: String by project
-	val gdxVersion: String by project
-	val visUiVersion: String by project
-	val ktxVersion: String by project
-	val kotlinVersion: String by project
 	val kotlinxCoroutinesVersion: String by project
-	api("com.badlogicgames.ashley:ashley:$ashleyVersion")
-	api("com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion")
-	api("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
-	api("com.badlogicgames.gdx:gdx-freetype:$gdxVersion")
-	api("com.badlogicgames.gdx:gdx:$gdxVersion")
-	api("com.kotcrab.vis:vis-ui:$visUiVersion")
-	api("io.github.libktx:ktx-actors:$ktxVersion")
-	api("io.github.libktx:ktx-app:$ktxVersion")
-	api("io.github.libktx:ktx-ashley:$ktxVersion")
-	api("io.github.libktx:ktx-assets-async:$ktxVersion")
-	api("io.github.libktx:ktx-assets:$ktxVersion")
-	api("io.github.libktx:ktx-async:$ktxVersion")
-	api("io.github.libktx:ktx-box2d:$ktxVersion")
-	api("io.github.libktx:ktx-collections:$ktxVersion")
-	api("io.github.libktx:ktx-freetype-async:$ktxVersion")
-	api("io.github.libktx:ktx-freetype:$ktxVersion")
-	api("io.github.libktx:ktx-graphics:$ktxVersion")
-	api("io.github.libktx:ktx-i18n:$ktxVersion")
-	api("io.github.libktx:ktx-json:$ktxVersion")
-	api("io.github.libktx:ktx-log:$ktxVersion")
-	api("io.github.libktx:ktx-math:$ktxVersion")
-	api("io.github.libktx:ktx-preferences:$ktxVersion")
-	api("io.github.libktx:ktx-reflect:$ktxVersion")
-	api("io.github.libktx:ktx-scene2d:$ktxVersion")
-	api("io.github.libktx:ktx-style:$ktxVersion")
-	api("io.github.libktx:ktx-tiled:$ktxVersion")
-	api("io.github.libktx:ktx-vis-style:$ktxVersion")
-	api("io.github.libktx:ktx-vis:$ktxVersion")
-	api("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+	api(libs.ashley)
+	api(libs.libGDX.controllers.core)
+	api(libs.libGDX.box2D)
+	api(libs.libGDX.freetype)
+	api(libs.libGDX)
+	api(libs.visUI)
+	api(libs.libKTX.actors)
+	api(libs.libKTX.app)
+	api(libs.libKTX.ashley)
+	api(libs.libKTX.assets)
+	api(libs.libKTX.assets.async)
+	api(libs.libKTX.async)
+	api(libs.libKTX.box2D)
+	api(libs.libKTX.collections)
+	api(libs.libKTX.freetype)
+	api(libs.libKTX.freetype.async)
+	api(libs.libKTX.graphics)
+	api(libs.libKTX.i18n)
+	api(libs.libKTX.json)
+	api(libs.libKTX.log)
+	api(libs.libKTX.maths)
+	api(libs.libKTX.preferences)
+	api(libs.libKTX.reflect)
+	api(libs.libKTX.scene2D)
+	api(libs.libKTX.style)
+	api(libs.libKTX.tiled)
+	api(libs.libKTX.vis)
+	api(libs.libKTX.vis.style)
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
-	compileOnly("org.jetbrains:annotations:26.0.2-1")
+	compileOnly(libs.jetBrains.annotations)
 	implementation(project(":gdx_helpers"))
 }
 

@@ -1,0 +1,43 @@
+[versions]
+libGDX = "1.14.0"
+libKTX = "1.13.1-rc1"
+kotlin = "2.3.0"
+kotlinx-coroutines = "1.8.1"
+libGDXControllers = "2.2.3"
+visUI = "1.5.7"
+ashley = "1.7.4"
+
+[libraries]
+libGDX = { module = "com.badlogicgames.gdx:gdx", version.ref = "libGDX" }
+libGDX-controllers-core = { module = "com.badlogicgames.gdx-controllers:gdx-controllers-core", version.ref = "libGDXControllers" }
+libGDX-box2D = { module = "com.badlogicgames.gdx:gdx-box2d", version.ref = "libGDX" }
+libGDX-freetype = { module = "com.badlogicgames.gdx:gdx-freetype", version.ref = "libGDX" }
+libKTX-actors = { module = "io.github.libktx:ktx-actors", version.ref = "libKTX" }
+libKTX-app = { module = "io.github.libktx:ktx-app", version.ref = "libKTX" }
+libKTX-ashley = { module = "io.github.libktx:ktx-ashley", version.ref = "libKTX" }
+libKTX-assets = { module = "io.github.libktx:ktx-assets", version.ref = "libKTX" }
+libKTX-assets-async = { module = "io.github.libktx:ktx-assets-async", version.ref = "libKTX" }
+libKTX-async = { module = "io.github.libktx:ktx-async", version.ref = "libKTX" }
+libKTX-box2D = { module = "io.github.libktx:ktx-box2d", version.ref = "libKTX" }
+libKTX-collections = { module = "io.github.libktx:ktx-collections", version.ref = "libKTX" }
+libKTX-freetype = { module = "io.github.libktx:ktx-freetype", version.ref = "libKTX" }
+libKTX-freetype-async = { module = "io.github.libktx:ktx-freetype-async", version.ref = "libKTX" }
+libKTX-graphics = { module = "io.github.libktx:ktx-graphics", version.ref = "libKTX" }
+libKTX-i18n = { module = "io.github.libktx:ktx-i18n", version.ref = "libKTX" }
+libKTX-json = { module = "io.github.libktx:ktx-json", version.ref = "libKTX" }
+libKTX-log = { module = "io.github.libktx:ktx-log", version.ref = "libKTX" }
+libKTX-maths = { module = "io.github.libktx:ktx-math", version.ref = "libKTX" }
+libKTX-preferences = { module = "io.github.libktx:ktx-preferences", version.ref = "libKTX" }
+libKTX-reflect = { module = "io.github.libktx:ktx-reflect", version.ref = "libKTX" }
+libKTX-scene2D = { module = "io.github.libktx:ktx-scene2d", version.ref = "libKTX" }
+libKTX-style = { module = "io.github.libktx:ktx-scene2d", version.ref = "libKTX" }
+libKTX-tiled = { module = "io.github.libktx:ktx-tiled", version.ref = "libKTX" }
+libKTX-vis = { module = "io.github.libktx:ktx-vis", version.ref = "libKTX" }
+libKTX-vis-style = { module = "io.github.libktx:ktx-vis-style", version.ref = "libKTX" }
+ashley = { module = "com.badlogicgames.ashley:ashley", version.ref = "ashley" }
+visUI = { module = "com.kotcrab.vis:vis-ui", version.ref = "visUI" }
+jetBrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2-1" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+construo = { id = "io.github.fourlastor.construo", version = "2.1.0" }
