@@ -7,7 +7,12 @@ import io.github.epicvon2468.gdx_helpers.actors.SpriteActor
 class TutorialWorldScreen(main: Main) : WorldScreen(main) {
 
 	override fun postInit() {
-		stage.addActor(SpriteActor(Textures.notFoundTexture).debug())
-		stage.addActor(SpriteActor(Textures["alien.png"]).debug())
+		val debug: SpriteActor = SpriteActor(Textures.notFoundTexture).debug()
+		val alien: SpriteActor = SpriteActor(Textures["alien.png"]).debug()
+		stage.addActor(debug)
+		stage.addActor(alien)
+		table.add(debug.copy()).width(64f)
+		table.row()
+		table.add(alien.copy())
 	}
 }
