@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 import java.net.URI
 
 buildscript {
@@ -12,6 +15,11 @@ buildscript {
 
 plugins {
 	kotlin("jvm") version "2.3.0"
+}
+
+kotlin {
+	jvmToolchain(25)
+	kotlinDaemonJvmArgs = listOf("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
 }
 
 repositories {
@@ -30,11 +38,8 @@ allprojects {
 }
 
 configure(subprojects) {
-//	plugins {
-//		id("java-library") apply true
-//		id("kotlin") apply true
-//	}
-//	java.sourceCompatibility = 25
+	apply(plugin = "java-library")
+	java.sourceCompatibility = JavaVersion.VERSION_25
 
 	// NOTE: This task has been partially rewritten to work with the Kotlin Gradle DSL
 	// From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
@@ -62,13 +67,13 @@ configure(subprojects) {
 		}
 		appendRecursive(assetsFolder)
 	}
-	tasks.findByPath("processResources")?.dependsOn("generateAssetList")
+	tasks.processResources.get().dependsOn("generateAssetList")
 
-//	compileJava {
-//		options.setIncremental(true)
-//	}
-//	compileKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
-//	compileTestKotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
+	tasks.compileJava.get().apply {
+		options.setIncremental(true)
+	}
+//	tasks.compileKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
+//	tasks.compileTestKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
 }
 
 subprojects {

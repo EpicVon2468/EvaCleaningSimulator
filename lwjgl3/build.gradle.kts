@@ -1,5 +1,4 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
-
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 import io.github.fourlastor.construo.Target
