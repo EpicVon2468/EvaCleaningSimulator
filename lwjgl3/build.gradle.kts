@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 import io.github.fourlastor.construo.Target
 
+import java.net.URI
+
 buildscript {
 	repositories {
 		gradlePluginPortal()
@@ -16,10 +18,19 @@ plugins {
 }
 
 sourceSets.main.get().resources.srcDirs += rootProject.file("assets")
-application.mainClass = "io.github.epicvon2468.eva_cleaning_simulator.lwjgl3.Lwjgl3Launcher"
+application.mainClass = "net.fabricmc.loader.impl.launch.knot.KnotClient"
 kotlin {
 	jvmToolchain(25)
 	kotlinDaemonJvmArgs = listOf("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
+}
+
+repositories {
+	maven {
+		url = URI("https://repo.spongepowered.org/maven/")
+	}
+	maven {
+		url = URI("https://maven.fabricmc.net/")
+	}
 }
 
 dependencies {
@@ -32,6 +43,23 @@ dependencies {
 	implementation("com.badlogicgames.gdx:gdx-lwjgl3-angle:$gdxVersion")
 	implementation("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
 	implementation(project(":core"))
+
+	implementation("net.fabricmc:fabric-loader:0.18.3")
+	implementation("net.fabricmc:access-widener:2.1.0")
+	implementation("net.fabricmc:tiny-mappings-parser:0.2.2.14")
+	implementation("com.google.guava:guava:33.5.0-jre")
+	implementation("com.google.code.gson:gson:2.13.2")
+	implementation("net.fabricmc:sponge-mixin:0.17.0+mixin.0.8.7") {
+		// CVE-2022-25647
+		exclude(group = "com.google.code.gson", module = "gson")
+		// CVE-2023-2976, CVE-2020-8908, CVE-2018-10237
+		exclude(group = "com.google.guava", module = "guava")
+	}
+	implementation("org.ow2.asm:asm:9.9.1")
+	implementation("org.ow2.asm:asm-analysis:9.9.1")
+	implementation("org.ow2.asm:asm-commons:9.9.1")
+	implementation("org.ow2.asm:asm-tree:9.9.1")
+	implementation("org.ow2.asm:asm-util:9.9.1")
 }
 
 tasks.run.get().apply {
