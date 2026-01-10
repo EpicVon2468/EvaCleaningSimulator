@@ -11,7 +11,7 @@ buildscript {
 
 plugins {
 	id("application")
-	kotlin("jvm")
+	kotlin("jvm") version "2.3.0"
 	id("io.github.fourlastor.construo") version "2.1.0"
 }
 
@@ -53,6 +53,7 @@ tasks.jar.get().apply {
 	// the duplicatesStrategy matters starting in Gradle 7.0; this setting works.
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	dependsOn(configurations.runtimeClasspath)
+	// FIXME: What does this do?  Does it need porting over?  If so, how to do so?
 //	from {
 //		configurations.runtimeClasspath.collect { if (it.isDirectory()) it else zipTree(it) }
 //	}
@@ -61,14 +62,15 @@ tasks.jar.get().apply {
 	dependencies {
 		exclude("META-INF/INDEX.LIST", "META-INF/maven/**")
 	}
-	// setting the manifest makes the JAR runnable.
-	// enabling native access helps avoid a warning when Java 24 or later runs the JAR.
 	manifest {
-		attributes("Main-Class" to application.mainClass, "Enable-Native-Access" to "ALL-UNNAMED")
+		attributes(
+			"Main-Class" to application.mainClass,
+			"Enable-Native-Access" to "ALL-UNNAMED"
+		)
 	}
 	// this last step may help on some OSes that need extra instruction to make runnable JARs.
 	doLast {
-		file(archiveFile).setExecutable(true, false)
+		file(archiveFile).setExecutable(/*executable =*/ true, /*ownerOnly =*/ false)
 	}
 }
 
@@ -78,11 +80,18 @@ tasks.register<Jar>("jarMac") {
 	dependsOn("jar")
 	group = "build"
 	archiveFileName.set("${appName}-${projectVersion}-mac.jar")
-	exclude("windows/x86/**", "windows/x64/**", "linux/arm32/**", "linux/arm64/**", "linux/x64/**", "**/*.dll", "**/*.so",
-		"META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+	exclude(
+		"windows/x86/**", "windows/x64/**",
+		"linux/arm32/**", "linux/arm64/**", "linux/x64/**",
+		"**/*.dll", "**/*.so",
+		"META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA"
+	)
 	dependencies {
-		exclude("windows/x86/**", "windows/x64/**", "linux/arm32/**", "linux/arm64/**", "linux/x64/**",
-			"META-INF/INDEX.LIST", "META-INF/maven/**")
+		exclude(
+			"windows/x86/**", "windows/x64/**",
+			"linux/arm32/**", "linux/arm64/**", "linux/x64/**",
+			"META-INF/INDEX.LIST", "META-INF/maven/**"
+		)
 	}
 }
 
@@ -92,11 +101,18 @@ tasks.register<Jar>("jarLinux") {
 	dependsOn("jar")
 	group = "build"
 	archiveFileName.set("${appName}-${projectVersion}-linux.jar")
-	exclude("windows/x86/**", "windows/x64/**", "macos/arm64/**", "macos/x64/**", "**/*.dll", "**/*.dylib",
-		"META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+	exclude(
+		"windows/x86/**", "windows/x64/**",
+		"macos/arm64/**", "macos/x64/**",
+		"**/*.dll", "**/*.dylib",
+		"META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA"
+	)
 	dependencies {
-		exclude("windows/x86/**", "windows/x64/**", "macos/arm64/**", "macos/x64/**",
-			"META-INF/INDEX.LIST", "META-INF/maven/**")
+		exclude(
+			"windows/x86/**", "windows/x64/**",
+			"macos/arm64/**", "macos/x64/**",
+			"META-INF/INDEX.LIST", "META-INF/maven/**"
+		)
 	}
 }
 
@@ -106,11 +122,18 @@ tasks.register<Jar>("jarWin") {
 	dependsOn("jar")
 	group = "build"
 	archiveFileName.set("${appName}-${projectVersion}-win.jar")
-	exclude("macos/arm64/**", "macos/x64/**", "linux/arm32/**", "linux/arm64/**", "linux/x64/**", "**/*.dylib", "**/*.so",
-		"META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+	exclude(
+		"macos/arm64/**", "macos/x64/**",
+		"linux/arm32/**", "linux/arm64/**", "linux/x64/**",
+		"**/*.dylib", "**/*.so",
+		"META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA"
+	)
 	dependencies {
-		exclude("macos/arm64/**", "macos/x64/**", "linux/arm32/**", "linux/arm64/**", "linux/x64/**",
-			"META-INF/INDEX.LIST", "META-INF/maven/**")
+		exclude(
+			"macos/arm64/**", "macos/x64/**",
+			"linux/arm32/**", "linux/arm64/**", "linux/x64/**",
+			"META-INF/INDEX.LIST", "META-INF/maven/**"
+		)
 	}
 }
 
@@ -120,34 +143,36 @@ construo {
 	// human-readable name, used for example in the `.app` name for macOS
 	humanName.set(appName)
 
-	targets.register<Target.Linux>("linuxX64") {
-		architecture.set(Target.Architecture.X86_64)
-		jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-linux-x64-b176.4.tar.gz")
-		// Linux does not currently have a way to set the icon on the executable
-	}
-	targets.register<Target.MacOs>("macM1") {
-		architecture.set(Target.Architecture.AARCH64)
-		jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-osx-aarch64-b176.4.tar.gz")
-		// macOS needs an identifier
-		identifier.set("io.github.epicvon2468.eva_cleaning_simulator.$appName")
-		// Optional: icon for macOS, as an ICNS file
-		macIcon.set(project.file("icons/logo.icns"))
-	}
-	targets.register<Target.MacOs>("macX64") {
-		architecture.set(Target.Architecture.X86_64)
-		jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-osx-x64-b176.4.tar.gz")
-		// macOS needs an identifier
-		identifier.set("io.github.epicvon2468.eva_cleaning_simulator.$appName")
-		// Optional: icon for macOS, as an ICNS file
-		macIcon.set(project.file("icons/logo.icns"))
-	}
-	targets.register<Target.Windows>("winX64") {
-		architecture.set(Target.Architecture.X86_64)
-		// Optional: icon for Windows, as a PNG
-		icon.set(project.file("icons/logo.png"))
-		jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-windows-x64-b176.4.zip")
-		// Uncomment the next line to show a console when the game runs, to print messages.
-		//useConsole.set(true)
+	targets.apply {
+		register<Target.Linux>("linuxX64") {
+			architecture.set(Target.Architecture.X86_64)
+			jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-linux-x64-b176.4.tar.gz")
+			// Linux does not currently have a way to set the icon on the executable
+		}
+		register<Target.MacOs>("macM1") {
+			architecture.set(Target.Architecture.AARCH64)
+			jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-osx-aarch64-b176.4.tar.gz")
+			// macOS needs an identifier
+			identifier.set("io.github.epicvon2468.eva_cleaning_simulator.$appName")
+			// Optional: icon for macOS, as an ICNS file
+			macIcon.set(project.file("icons/logo.icns"))
+		}
+		register<Target.MacOs>("macX64") {
+			architecture.set(Target.Architecture.X86_64)
+			jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-osx-x64-b176.4.tar.gz")
+			// macOS needs an identifier
+			identifier.set("io.github.epicvon2468.eva_cleaning_simulator.$appName")
+			// Optional: icon for macOS, as an ICNS file
+			macIcon.set(project.file("icons/logo.icns"))
+		}
+		register<Target.Windows>("winX64") {
+			architecture.set(Target.Architecture.X86_64)
+			// Optional: icon for Windows, as a PNG
+			icon.set(project.file("icons/logo.png"))
+			jdkUrl.set("https://cache-redirector.jetbrains.com/intellij-jbr/jbr-25-windows-x64-b176.4.zip")
+			// Uncomment the next line to show a console when the game runs, to print messages.
+			//useConsole.set(true)
+		}
 	}
 }
 
