@@ -43,22 +43,11 @@ class Lwjgl3GameProvider : GameProvider {
 		args: Array<String>
 	): Boolean {
 		this.args = Arguments().apply { parse(args) }
-		for (path: Path in launcher.classPath) {
-			println("path: $path")
-			if (!path.isDirectory()) {
-				if ("core/build/libs/core-" in path.toString()) this.classPath.add(path)
-				continue
-			}
-			println("got path: $path")
-			if (
-				path.resolve("io/github/epicvon2468/eva_cleaning_simulator/MainKt.class").exists()
-				|| path.resolve("io/github/epicvon2468/eva_cleaning_simulator/lwjgl3/Lwjgl3Launcher.class").exists()
-			) {
-				this.classPath.add(path)
-				println("exists")
-			}
+		launcher.classPath.filterTo(this.classPath) { path: Path ->
+			return@filterTo if (!path.isDirectory()) "core/build/libs/core-" in path.toString()
+			else path.resolve(LWJGL3LAUNCHER_CLASS).exists()
 		}
-		return true
+		return this.classPath.isNotEmpty()
 	}
 
 	override fun initialize(launcher: FabricLauncher) = this.entrypointTransformer.locateEntrypoints(launcher, this.classPath.toList())
@@ -66,9 +55,7 @@ class Lwjgl3GameProvider : GameProvider {
 	private val transformer = GameTransformer()
 	override fun getEntrypointTransformer(): GameTransformer = this.transformer
 
-	override fun unlockClassPath(launcher: FabricLauncher) {
-		this.classPath.forEach(launcher::addToClassPath)
-	}
+	override fun unlockClassPath(launcher: FabricLauncher) = this.classPath.forEach(launcher::addToClassPath)
 
 	override fun launch(loader: ClassLoader) {
 		val `class`: Class<*> = loader.loadClass(this.entrypoint)
@@ -79,4 +66,9 @@ class Lwjgl3GameProvider : GameProvider {
 	override fun getArguments(): Arguments = args
 
 	override fun getLaunchArguments(sanitize: Boolean): Array<String> = this.arguments.toArray()
+
+	companion object {
+
+		const val LWJGL3LAUNCHER_CLASS: String = "io/github/epicvon2468/eva_cleaning_simulator/lwjgl3/Lwjgl3Launcher.class"
+	}
 }

@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 import io.github.fourlastor.construo.Target
 
+import org.gradle.internal.os.OperatingSystem as OS
+
 import java.net.URI
 
 buildscript {
@@ -67,7 +69,30 @@ tasks.run.get().apply {
 	// You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
 	//setIgnoreExitValue(true)
 	jvmArgs("--enable-native-access=ALL-UNNAMED")
-	environment("__GL_THREADED_OPTIMIZATIONS", 0)
+
+	// You can't update this within the JVM...
+	// (You can update the environment variable, but it doesn't update to respect that you did as such).
+	fun isNVIDIA() = File("/proc/driver").list().let {
+		it.size > 0 && it.any { path: String -> "NVIDIA" in path.uppercase() }
+	}
+	if (OS.current() == OS.LINUX && isNVIDIA()) {
+		fun separator(isStart: Boolean) {
+			if (isStart) print("\u001B[91m")
+			repeat(51) {
+				print("---")
+			}
+			println('-')
+			if (!isStart) println("\u001B[0m")
+		}
+		separator(true)
+		println("WARNING: Applying Linux NVIDIA threaded optimisations fix!")
+		println("WARNING: To be able to run with the standalone jar, you will need to disable (set to 0) the '__GL_THREADED_OPTIMIZATIONS' environment variable beforehand!")
+		println("WARNING: If you think this is a mistake or if this has been since fixed, open an issue, or comment out these lines in lwjgl3/build.gradle.kts!")
+		separator(false)
+		environment("__GL_THREADED_OPTIMIZATIONS", 0)
+	}
+
+	systemProperty("sun.misc.unsafe.memory.access", "allow")
 
 	if ("mac" in System.getProperty("os.name").lowercase()) jvmArgs("-XstartOnFirstThread")
 }
