@@ -75,20 +75,22 @@ tasks.run.get().apply {
 	fun isNVIDIA() = File("/proc/driver").list().let {
 		it.size > 0 && it.any { path: String -> "NVIDIA" in path.uppercase() }
 	}
-	if (OS.current() == OS.LINUX && isNVIDIA()) {
-		fun separator(isStart: Boolean) {
-			if (isStart) print("\u001B[91m")
-			repeat(51) {
-				print("---")
+	val nvidiaThreadedOptimisationsFix: String by project
+	if (OS.current() == OS.LINUX && nvidiaThreadedOptimisationsFix == "true" && isNVIDIA()) {
+		val nvidiaThreadedOptimisationsFixWarning: String by project
+		if (nvidiaThreadedOptimisationsFixWarning == "true") {
+			fun separator(isStart: Boolean) {
+				if (isStart) print("\u001B[91m")
+				repeat(57) { print("---") }
+				println('\b')
+				if (!isStart) println("\u001B[0m")
 			}
-			println('-')
-			if (!isStart) println("\u001B[0m")
+			separator(true)
+			println("WARNING: Applying Linux NVIDIA threaded optimisations fix!")
+			println("WARNING: To be able to run with the standalone jar, you will need to disable (set to 0) the '__GL_THREADED_OPTIMIZATIONS' environment variable beforehand!")
+			println("WARNING: If you think this is a mistake or if this has been since fixed, either open an issue or set 'nvidiaThreadedOptimisationsWarning' to 'false' in gradle.properties!")
+			separator(false)
 		}
-		separator(true)
-		println("WARNING: Applying Linux NVIDIA threaded optimisations fix!")
-		println("WARNING: To be able to run with the standalone jar, you will need to disable (set to 0) the '__GL_THREADED_OPTIMIZATIONS' environment variable beforehand!")
-		println("WARNING: If you think this is a mistake or if this has been since fixed, open an issue, or comment out these lines in lwjgl3/build.gradle.kts!")
-		separator(false)
 		environment("__GL_THREADED_OPTIMIZATIONS", 0)
 	}
 
