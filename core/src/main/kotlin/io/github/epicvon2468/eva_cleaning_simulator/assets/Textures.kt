@@ -10,19 +10,19 @@ import ktx.assets.load
 
 data object Textures {
 
-	const val TEXTURES_DIR: String = "resources/textures/"
+	const val TEXTURES_DIR: String = "resources/textures"
 
 	private val _notFoundTexture: Asset<Texture> = preload("not_found.png")
 	@DoNotManuallyDispose(DoNotManuallyDispose.Reason.MANAGED_RESOURCE)
 	val notFoundTexture: Texture by _notFoundTexture
 
 	init {
-		preload("alien.png")
+		preload("other", "alien.png")
 	}
 
-	fun preload(path: String): Asset<Texture> = "$TEXTURES_DIR$path".let(Resources::load)
+	fun preload(vararg path: String): Asset<Texture> = "$TEXTURES_DIR${path.joinToString(separator = "/", prefix = "/")}".let(Resources::load)
 
-	operator fun get(path: String): Texture = "$TEXTURES_DIR$path".let { path: String ->
+	operator fun get(vararg path: String): Texture = "$TEXTURES_DIR${path.joinToString(separator = "/", prefix = "/")}".let { path: String ->
 		if (path !in Resources) notFoundTexture else Resources[path]
 	}
 }
