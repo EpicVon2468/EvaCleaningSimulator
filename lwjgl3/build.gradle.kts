@@ -52,6 +52,11 @@ dependencies {
 	implementation("com.google.guava:guava:33.5.0-jre")
 	implementation("com.google.code.gson:gson:2.13.2")
 	implementation("net.fabricmc:sponge-mixin:0.17.0+mixin.0.8.7") {
+		exclude(group = "org.ow2.asm", module = "asm")
+		exclude(group = "org.ow2.asm", module = "asm-analysis")
+		exclude(group = "org.ow2.asm", module = "asm-commons")
+		exclude(group = "org.ow2.asm", module = "asm-tree")
+		exclude(group = "org.ow2.asm", module = "asm-util")
 		// CVE-2022-25647
 		exclude(group = "com.google.code.gson", module = "gson")
 		// CVE-2023-2976, CVE-2020-8908, CVE-2018-10237
@@ -68,13 +73,11 @@ tasks.run.get().apply {
 	workingDir = rootProject.file("assets")
 	// You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
 	//setIgnoreExitValue(true)
-	jvmArgs("--enable-native-access=ALL-UNNAMED")
+	jvmArgs("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
 
 	// You can't update this within the JVM...
 	// (You can update the environment variable, but it doesn't update to respect that you did as such).
-	fun isNVIDIA() = File("/proc/driver").list().let {
-		it.size > 0 && it.any { path: String -> "NVIDIA" in path.uppercase() }
-	}
+	fun isNVIDIA() = File("/proc/driver").list { _, path: String -> "NVIDIA" in path.uppercase() }.isNullOrEmpty().not()
 	val nvidiaThreadedOptimisationsFix: String by project
 	if (OS.current() == OS.LINUX && nvidiaThreadedOptimisationsFix == "true" && isNVIDIA()) {
 		val nvidiaThreadedOptimisationsFixWarning: String by project
