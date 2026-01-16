@@ -20,7 +20,7 @@ plugins {
 }
 
 sourceSets.main.get().resources.srcDirs += rootProject.file("assets")
-application.mainClass = "net.fabricmc.loader.impl.launch.knot.KnotClient"
+application.mainClass = "io.github.epicvon2468.eva_cleaning_simulator.lwjgl3.fabric.Lwjgl3GameLauncher"
 kotlin {
 	jvmToolchain(25)
 	kotlinDaemonJvmArgs = listOf("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
@@ -73,30 +73,9 @@ tasks.run.get().apply {
 	workingDir = rootProject.file("assets")
 	// You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
 	//setIgnoreExitValue(true)
+
+	// Suppress native access warnings & enable Compact Object Headers.
 	jvmArgs("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
-
-	// You can't update this within the JVM...
-	// (You can update the environment variable, but it doesn't update to respect that you did as such).
-	fun isNVIDIA() = File("/proc/driver").list { _, path: String -> "NVIDIA" in path.uppercase() }.isNullOrEmpty().not()
-	val nvidiaThreadedOptimisationsFix: String by project
-	if (OS.current() == OS.LINUX && nvidiaThreadedOptimisationsFix == "true" && isNVIDIA()) {
-		val nvidiaThreadedOptimisationsFixWarning: String by project
-		if (nvidiaThreadedOptimisationsFixWarning == "true") {
-			fun separator(isStart: Boolean) {
-				if (isStart) print("\u001B[91m")
-				repeat(57) { print("---") }
-				println('\b')
-				if (!isStart) println("\u001B[0m")
-			}
-			separator(true)
-			println("WARNING: Applying Linux NVIDIA threaded optimisations fix!")
-			println("WARNING: To be able to run with the standalone jar, you will need to disable (set to 0) the '__GL_THREADED_OPTIMIZATIONS' environment variable beforehand!")
-			println("WARNING: If you think this is a mistake or if this has been since fixed, either open an issue or set 'nvidiaThreadedOptimisationsWarning' to 'false' in gradle.properties!")
-			separator(false)
-		}
-		environment("__GL_THREADED_OPTIMIZATIONS", 0)
-	}
-
 	systemProperty("sun.misc.unsafe.memory.access", "allow")
 
 	if ("mac" in System.getProperty("os.name").lowercase()) jvmArgs("-XstartOnFirstThread")

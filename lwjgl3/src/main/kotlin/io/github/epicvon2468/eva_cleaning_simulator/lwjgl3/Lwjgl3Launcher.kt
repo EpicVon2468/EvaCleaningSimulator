@@ -15,8 +15,6 @@ object Lwjgl3Launcher {
 	/** Launches the desktop (LWJGL3) application. */
 	@JvmStatic
 	fun main(args: Array<String>) {
-		// This handles macOS support and helps on Windows.
-		StartupHelper.help()
 		val main = Main()
 		Hooks.startClient(File("").absoluteFile.parentFile.resolve(".run"), main)
 		Lwjgl3Application(main, Lwjgl3ApplicationConfiguration().apply {
