@@ -61,13 +61,13 @@ object StartupHelper {
 	 *   // ...
 	 * }
 	 * ```
-	 * @param redirectOutput whether I/O should be inherited in the child JVM process.  Please note that enabling this will block the thread until the child JVM process stops executing.
+	 * @param inheritIO whether I/O should be inherited in the child JVM process.  Please note that enabling this will block the thread until the child JVM process stops executing.
 	 * @return whether a child JVM process was spawned or not.
 	 */
 	@JvmOverloads
-	fun startNewJvmIfRequired(redirectOutput: Boolean = true): Boolean {
+	fun startNewJvmIfRequired(inheritIO: Boolean = true): Boolean {
 		val osName: String = System.getProperty("os.name").lowercase()
-		if ("mac" in osName) return startNewJvm0(isMac = true, redirectOutput)
+		if ("mac" in osName) return startNewJvm0(isMac = true, inheritIO)
 		if ("windows" in osName) {
 			// Here, we are trying to work around an issue with how LWJGL3 loads its extracted .dll files.
 			// By default, LWJGL3 extracts to the directory specified by "java.io.tmpdir", which is usually the user's home.
@@ -88,7 +88,7 @@ object StartupHelper {
 			System.setProperty("user.name", prevUser)
 			return false
 		}
-		return startNewJvm0(isMac = false, redirectOutput)
+		return startNewJvm0(isMac = false, inheritIO)
 	}
 
 	private const val MAC_JRE_ERR_MSG: String = "A Java installation could not be found.  If you are distributing this app with a bundled JRE, be sure to set the '-XstartOnFirstThread' argument manually!"
@@ -100,10 +100,10 @@ object StartupHelper {
 	 * All [Environment Variables][System.getenv] are copied to the child JVM process (if it is spawned), as specified by [ProcessBuilder.environment];  The same applies for [System Properties][System.getProperties].
 	 *
 	 * @param isMac whether the current OS is macOS.  If this is `false` then the current OS is assumed to be Linux (and an immediate check for NVIDIA drivers is performed).
-	 * @param redirectOutput whether I/O should be inherited in the child JVM process.  Please note that enabling this will block the thread until the child JVM process stops executing.
+	 * @param inheritIO whether I/O should be inherited in the child JVM process.  Please note that enabling this will block the thread until the child JVM process stops executing.
 	 * @return whether a child JVM process was spawned or not.
 	 */
-	fun startNewJvm0(isMac: Boolean, redirectOutput: Boolean): Boolean {
+	fun startNewJvm0(isMac: Boolean, inheritIO: Boolean): Boolean {
 		val processID: Long = if (isMac) LibC.getpid() else UNISTD.getpid().toLong()
 		if (!isMac) {
 			// No need to restart non-NVIDIA Linux
@@ -161,7 +161,7 @@ object StartupHelper {
 			val processBuilder = ProcessBuilder(jvmArgs)
 			if (!isMac) processBuilder.environment()["__GL_THREADED_OPTIMIZATIONS"] = "0"
 
-			if (!redirectOutput) processBuilder.start()
+			if (!inheritIO) processBuilder.start()
 			else processBuilder.inheritIO().start().waitFor()
 		} catch (e: Exception) {
 			System.err.println("There was a problem restarting the JVM")
