@@ -47,10 +47,10 @@ configure(subprojects) {
 	// The article can be helpful when using assets.txt in your project.
 	tasks.register("generateAssetList") {
 		// projectFolder/assets
-		val assetsFolder = project.rootDir.resolve("assets")
+		val assetsFolder: File = project.rootDir.resolve("assets")
 		inputs.dir(assetsFolder)
 		// projectFolder/assets/assets.txt
-		val assetsFile = assetsFolder.resolve("assets.txt")
+		val assetsFile: File = assetsFolder.resolve("assets.txt")
 		// delete that file in case we've already created it
 		assetsFile.delete()
 
@@ -71,7 +71,7 @@ configure(subprojects) {
 	tasks.processResources.get().dependsOn("generateAssetList")
 
 	tasks.compileJava.get().apply {
-		options.setIncremental(true)
+		options.isIncremental = true
 	}
 //	tasks.compileKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
 //	tasks.compileTestKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)

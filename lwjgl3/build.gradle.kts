@@ -25,12 +25,8 @@ kotlin {
 }
 
 repositories {
-	maven {
-		url = URI("https://repo.spongepowered.org/maven/")
-	}
-	maven {
-		url = URI("https://maven.fabricmc.net/")
-	}
+	maven { url = URI("https://repo.spongepowered.org/maven/") }
+	maven { url = URI("https://maven.fabricmc.net/") }
 }
 
 dependencies {
@@ -40,7 +36,6 @@ dependencies {
 	implementation("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
 	implementation("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
 	implementation("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
-	implementation("com.badlogicgames.gdx:gdx-lwjgl3-angle:$gdxVersion")
 	implementation("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
 	implementation(project(":core"))
 
@@ -67,20 +62,29 @@ dependencies {
 	implementation("org.ow2.asm:asm-util:9.9.1")
 }
 
+val appName: String by project
+val projectVersion: String by project
+
+application {
+	applicationName = appName
+}
+
+tasks.processResources.get().apply {
+	from(rootProject.files("assets")).into(rootProject.file("lwjgl3/src/main/resources"))
+}
+
 tasks.run.get().apply {
-	workingDir = rootProject.file("assets")
+	workingDir = rootProject.file(".")
 	// You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
 	//setIgnoreExitValue(true)
 
 	// Suppress native access warnings & enable Compact Object Headers.
 	jvmArgs("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
 	systemProperty("sun.misc.unsafe.memory.access", "allow")
+	systemProperty("fabric.development", "true")
 
 	if ("mac" in System.getProperty("os.name").lowercase()) jvmArgs("-XstartOnFirstThread")
 }
-
-val appName: String by project
-val projectVersion: String by project
 
 tasks.jar.get().apply {
 	// sets the name of the .jar file this produces to the name of the game or app, with the version after.

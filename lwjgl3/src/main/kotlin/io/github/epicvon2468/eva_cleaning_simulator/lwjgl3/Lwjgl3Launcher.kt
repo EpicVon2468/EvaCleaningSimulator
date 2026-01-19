@@ -16,7 +16,7 @@ object Lwjgl3Launcher {
 	@JvmStatic
 	fun main(args: Array<String>) {
 		val main = Main()
-		Hooks.startClient(File("").absoluteFile.parentFile.resolve(".run"), main)
+		Hooks.startClient(File("").absoluteFile.resolve(".run"), main)
 		Lwjgl3Application(main, Lwjgl3ApplicationConfiguration().apply {
 			setTitle("EvaCleaningSimulator")
 			// Vsync limits the frames per second to what your hardware can display, and helps eliminate
@@ -33,12 +33,7 @@ object Lwjgl3Launcher {
 			// They can also be loaded from the root of assets/ .
 			setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
 
-			// This should improve compatibility with Windows machines with buggy OpenGL drivers, Macs
-			// with Apple Silicon that have to emulate compatibility with OpenGL anyway, and more.
-			// This uses the dependency `com.badlogicgames.gdx:gdx-lwjgl3-angle` to function.
-			// You can choose to remove the following line and the mentioned dependency if you want; they
-			// are not intended for games that use GL30 (which is compatibility with OpenGL ES 3.0).
-			setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.ANGLE_GLES20, 0, 0)
+			setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL32, 4, 6)
 		})
 	}
 }

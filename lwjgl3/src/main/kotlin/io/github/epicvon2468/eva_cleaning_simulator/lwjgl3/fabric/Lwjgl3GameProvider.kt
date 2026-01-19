@@ -5,12 +5,23 @@ import net.fabricmc.loader.impl.game.patch.GameTransformer
 import net.fabricmc.loader.impl.launch.FabricLauncher
 import net.fabricmc.loader.impl.util.Arguments
 
-import java.lang.reflect.Method
 import java.nio.file.Path
 import java.io.File
+import java.lang.invoke.MethodHandle
+import java.lang.invoke.MethodHandles
+import java.lang.invoke.MethodType
+import java.nio.file.Files
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
 
+import kotlin.collections.iterator
+import kotlin.concurrent.thread
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.createDirectories
+import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.io.path.writeBytes
 
 class Lwjgl3GameProvider : GameProvider {
 
@@ -28,7 +39,7 @@ class Lwjgl3GameProvider : GameProvider {
 
 	override fun getEntrypoint(): String = "io.github.epicvon2468.eva_cleaning_simulator.lwjgl3.Lwjgl3Launcher"
 
-	override fun getLaunchDirectory(): Path = File("").absoluteFile.parentFile.resolve(".run").toPath()
+	override fun getLaunchDirectory(): Path = File("").absoluteFile.resolve(".run").toPath()
 
 	override fun requiresUrlClassLoader(): Boolean = false
 
@@ -44,10 +55,33 @@ class Lwjgl3GameProvider : GameProvider {
 	): Boolean {
 		this.args = Arguments().apply { parse(args) }
 		launcher.classPath.filterTo(this.classPath) { path: Path ->
-			return@filterTo if (!path.isDirectory()) "core/build/libs/core-" in path.toString()
+			return@filterTo if (!path.isDirectory()) extractClassPath(path).let { false }
 			else path.resolve(LWJGL3LAUNCHER_CLASS).exists()
 		}
 		return this.classPath.isNotEmpty()
+	}
+
+	@OptIn(ExperimentalPathApi::class)
+	private fun extractClassPath(jarPath: Path) {
+		if (classPath.any { it.startsWith(System.getProperty("java.io.tmpdir")) }) return
+		val jar = JarFile(jarPath.toFile())
+		val tmp: Path = Files.createTempDirectory("EvaCleaningSimulator")
+		for (entry: JarEntry in jar.entries()) {
+			if (entry.name.startsWith("io/github/epicvon2468/eva_cleaning_simulator")) {
+				val file: Path = tmp.resolve(entry.name)
+				if (entry.isDirectory) {
+					file.createDirectories()
+					continue
+				}
+				file.writeBytes(jar.getInputStream(entry).readAllBytes())
+			}
+		}
+		println("tmp: $tmp")
+		this.classPath.add(tmp)
+		jar.close()
+		Runtime.getRuntime().addShutdownHook(thread(start = false, name = "ExtractedGameClassPathCleaner") {
+			tmp.deleteRecursively()
+		})
 	}
 
 	override fun initialize(launcher: FabricLauncher) = this.entrypointTransformer.locateEntrypoints(launcher, this.classPath.toList())
@@ -59,8 +93,15 @@ class Lwjgl3GameProvider : GameProvider {
 
 	override fun launch(loader: ClassLoader) {
 		val `class`: Class<*> = loader.loadClass(this.entrypoint)
-		val main: Method = `class`.getMethod("main", Array<String>::class.java)
-		main(null, this.arguments.toArray())
+		val main: MethodHandle = MethodHandles.publicLookup().findStatic(
+			/*refc =*/ `class`,
+			/*name =*/ "main",
+			/*type =*/ MethodType.fromMethodDescriptorString(
+				/*descriptor =*/ "([Ljava/lang/String;)V",
+				/*loader =*/ loader
+			)
+		)
+		main.invokeExact(this.arguments.toArray())
 	}
 
 	override fun getArguments(): Arguments = args
