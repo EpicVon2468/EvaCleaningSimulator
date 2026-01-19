@@ -42,12 +42,22 @@ configure(subprojects) {
 	apply(plugin = "java-library")
 	java.sourceCompatibility = JavaVersion.VERSION_25
 
+	tasks.compileJava.get().apply {
+		options.isIncremental = true
+	}
+//	tasks.compileKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
+//	tasks.compileTestKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
+
+	if (project.name == "gdx_helpers") return@configure
+
+	val classPathListing: File = rootProject.file("build/classPathListing-${project.name}.txt")
+
 	// NOTE: This task has been partially rewritten to work with the Kotlin Gradle DSL
 	// From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
 	// The article can be helpful when using assets.txt in your project.
 	tasks.register("generateAssetList") {
 		// projectFolder/assets
-		val assetsFolder: File = project.rootDir.resolve("assets")
+		val assetsFolder: File = rootProject.file("assets")
 		inputs.dir(assetsFolder)
 		// projectFolder/assets/assets.txt
 		val assetsFile: File = assetsFolder.resolve("assets.txt")
@@ -57,24 +67,32 @@ configure(subprojects) {
 		// iterate through all files inside that folder
 		// convert it to a relative path
 		// and append it to the file assets.txt
-		fun appendRecursive(folder: File) {
+		fun appendRecursive(rootFolder: File, folder: File = rootFolder, outputFile: File) {
 			for (entry: File in folder.listFiles().sorted()) {
 				if (entry.isDirectory) {
-					appendRecursive(entry)
+					appendRecursive(
+						rootFolder = rootFolder,
+						folder = entry,
+						outputFile = outputFile
+					)
 					continue
 				}
-				assetsFile.appendText(entry.path.substringAfter(assetsFolder.path).drop(1) + '\n')
+				outputFile.appendText(entry.path.substringAfter(rootFolder.path).drop(1) + '\n')
 			}
 		}
-		appendRecursive(assetsFolder)
+		appendRecursive(rootFolder = assetsFolder, outputFile = assetsFile)
+
+		// This stuff is for optimising the extraction of the classpath to /tmp/* for FabricLoader to use.
+		classPathListing.delete()
+		val classPath: File = project.file("src/main/kotlin")
+		inputs.dir(classPath)
+		appendRecursive(rootFolder = classPath, outputFile = classPathListing)
 	}
 	tasks.processResources.get().dependsOn("generateAssetList")
 
-	tasks.compileJava.get().apply {
-		options.isIncremental = true
+	tasks.processResources.get().apply {
+		from(rootProject.files("assets")).into(project.file("src/main/resources"))
 	}
-//	tasks.compileKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
-//	tasks.compileTestKotlin.get().compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
 }
 
 subprojects {

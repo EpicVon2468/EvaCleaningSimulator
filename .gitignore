@@ -33,6 +33,7 @@ Thumbs.db
 /.kotlin/
 /assets/assets.txt
 .run/
+fabricloader.log
 
 ## Special cases:
 

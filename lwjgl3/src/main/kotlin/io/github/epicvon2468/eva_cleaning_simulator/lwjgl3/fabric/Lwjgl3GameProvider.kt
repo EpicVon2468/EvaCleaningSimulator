@@ -7,6 +7,7 @@ import net.fabricmc.loader.impl.util.Arguments
 
 import java.nio.file.Path
 import java.io.File
+import java.io.InputStream
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
@@ -14,13 +15,13 @@ import java.nio.file.Files
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 
-import kotlin.collections.iterator
 import kotlin.concurrent.thread
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.io.path.notExists
 import kotlin.io.path.writeBytes
 
 class Lwjgl3GameProvider : GameProvider {
@@ -65,16 +66,22 @@ class Lwjgl3GameProvider : GameProvider {
 	private fun extractClassPath(jarPath: Path) {
 		if (classPath.any { it.startsWith(System.getProperty("java.io.tmpdir")) }) return
 		val jar = JarFile(jarPath.toFile())
+		val classPathListing: JarEntry? = jar.getJarEntry("classPathListing.txt")
+		if (classPathListing == null) {
+			jar.close()
+			return
+		}
+		val listing: String = jar.getInputStream(classPathListing).use(InputStream::readAllBytes).decodeToString()
 		val tmp: Path = Files.createTempDirectory("EvaCleaningSimulator")
-		for (entry: JarEntry in jar.entries()) {
-			if (entry.name.startsWith("io/github/epicvon2468/eva_cleaning_simulator")) {
-				val file: Path = tmp.resolve(entry.name)
-				if (entry.isDirectory) {
-					file.createDirectories()
-					continue
-				}
-				file.writeBytes(jar.getInputStream(entry).readAllBytes())
+		for (entryName: String in listing.split('\n').dropLast(1)) {
+			if (!entryName.startsWith("io/github/epicvon2468/eva_cleaning_simulator")) continue
+			val classForm: String = entryName.dropLast(2) + "class"
+			val entry: JarEntry = jar.getJarEntry(classForm) ?: error("No entry found in jar '$jarPath' for name '$classForm'!")
+			val path: Path = tmp.resolve(entry.name)
+			path.parent.let { parent: Path ->
+				if (parent.notExists()) parent.createDirectories()
 			}
+			path.writeBytes(jar.getInputStream(entry).use(InputStream::readAllBytes))
 		}
 		println("tmp: $tmp")
 		this.classPath.add(tmp)

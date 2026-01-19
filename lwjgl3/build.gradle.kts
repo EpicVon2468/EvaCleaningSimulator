@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 import io.github.fourlastor.construo.Target
 
+import java.io.OutputStreamWriter
 import java.net.URI
 
 buildscript {
@@ -69,9 +70,14 @@ application {
 	applicationName = appName
 }
 
-tasks.processResources.get().apply {
-	from(rootProject.files("assets")).into(rootProject.file("lwjgl3/src/main/resources"))
+tasks.register<Copy>("mergeListings").configure {
+	this.inputs.files(rootProject.files("build/classPathListing-core.txt", "build/classPathListing-lwjgl3.txt"))
+	this.outputs.files(tasks.processResources.get().outputs.files)
+	outputs.files.files.first().resolve("classPathListing.txt").writer().use { writer: OutputStreamWriter ->
+		for (file: File in inputs.files) writer.append(file.readText())
+	}
 }
+tasks.processResources.get().dependsOn("mergeListings")
 
 tasks.run.get().apply {
 	workingDir = rootProject.file(".")
